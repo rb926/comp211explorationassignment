@@ -1,2 +1,21 @@
 # comp211explorationassignment
-COMP211 assignment to learn about chess baseboards
+
+**Purpose of this repository**
+We had an assignment in my COMP 211 (Systems Fundamentals) class to learn more about a topic of our choosing. I chose chess bitboards because I like chess and wanted to learn more about how chess algorithms and the bitwise operators we learned in class connect. This repo shows what I've learned about bitboards and their use in chess.
+
+**Topics I explored and what I learned**
+What is a bitboard: A bitboard is a standard integer where all the bits are assigned some value of significance by the programmer. For example, a 64-bit integer can be used to represent the 64 squares of a chessboard, with each bit in the integer representing 1 square (A-H1 are indexes 0-7, A-H2 are indexes 8-15, and so forth). This is shown by the image below, from the source https://billylevin.dev/posts/chess-engine-programming/. 
+
+<img width="396" height="336" alt="image" src="https://github.com/user-attachments/assets/9d05cd10-aac3-4d33-bcdf-91df32e3678d" />
+
+
+How are combinations of bitboards and bitwise operators used to create a working chess game: The bitboard representing the board can only have a 1 or 0 for each position, and this represents whether a piece is on the square or not. That's not enough information, so an engine uses a suite of bitboards to represent a game state. Ex: white_pawns is one bitboard, black_knights is another. Bitwise shifts (<< and >>) are used for movement. An example is white_pawns = white_pawns << 8 to represent a white pawn moving up 1 rank. A bitwise AND (&) and NOT (~) can be used for finding legal moves with the following: legal_moves = potential_moves & ~white_pieces. This means you can't move onto a square with your piece on it, but you still can capture your opponent's pieces. The bitwise OR (|) can see all occupied squares like so: occupied_squares = white_pieces | black_pieces. XOR (^) can be used to toggle bits when a piece moves from one square to another like so: bitboard ^= (1ULL << from_square) | (1ULL << to_square).
+
+For piece movements, the engine creates an array of 64 bitboards, with each index in that array representing one square. The bitboard at that index represents the valid moves from that square. This works well for knights because they can simply leap over other pieces in their path. But what if that path is blocked? For other pieces, they take the predetermined possible moves and use the bitwise AND to combine them with the occupied_squares bitboard I mentioned earlier. Then they use a hashing algorithm to map that to an integer that represents that exact blocking pattern to determine legal moves.
+
+Bitboards are typically present snapshots. How are castling, en passant, and other moves that require historical game knowledge enforced: 
+
+How chess engines save time by not re-analyzing positions that have already been reached in that game:
+
+The history of how bitboards were created:
+
