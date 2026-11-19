@@ -1,9 +1,11 @@
 # comp211explorationassignment
 
 **Purpose of this repository**
+
 We had an assignment in my COMP 211 (Systems Fundamentals) class to learn more about a topic of our choosing. I chose chess bitboards because I like chess and wanted to learn more about how chess algorithms and the bitwise operators we learned in class connect. This repo shows what I've learned about bitboards and their use in chess.
 
 **Topics I explored and what I learned**
+
 What is a bitboard: A bitboard is a standard integer where all the bits are assigned some value of significance by the programmer. For example, a 64-bit integer can be used to represent the 64 squares of a chessboard, with each bit in the integer representing 1 square (A-H1 are indexes 0-7, A-H2 are indexes 8-15, and so forth). This is shown by the image below, from the source https://billylevin.dev/posts/chess-engine-programming/. 
 
 <img width="396" height="336" alt="image" src="https://github.com/user-attachments/assets/9d05cd10-aac3-4d33-bcdf-91df32e3678d" />
@@ -13,9 +15,9 @@ How are combinations of bitboards and bitwise operators used to create a working
 
 For piece movements, the engine creates an array of 64 bitboards, with each index in that array representing one square. The bitboard at that index represents the valid moves from that square. This works well for knights because they can simply leap over other pieces in their path. But what if that path is blocked? For other pieces, they take the predetermined possible moves and use the bitwise AND to combine them with the occupied_squares bitboard I mentioned earlier. Then they use a hashing algorithm to map that to an integer that represents that exact blocking pattern to determine legal moves.
 
-Bitboards are typically present snapshots. How are castling, en passant, and other moves that require historical game knowledge enforced: 
+Bitboards are typically present snapshots. How are castling, en passant, and other moves that require historical game knowledge enforced: Bitboards can be used to track these as well. Take castling, for example. We can use a 4-bit integer to determine whether castling is allowed. Bit 0 represents white king side, bit 1 represents white queen side, bit 2 represents black king side, and bit 3 represents black queen side. At the start of the game, castling_rights = 0b1111. If the white king moves, use castling_rights &= 0b1100 to leave black's bits unchanged but turn white's off, removing white's castling rights. For en passant, every time a pawn moves two squares, an en passant target variable gets changed from null to the bit index for the square behind that pawn's square (essentially a ghost pawn on the square behind). Then that ghost pawn square counts as a valid capture square for opposing pawns. Then the engine uses XOR to move the opposing pawn to the ghost pawn square while simultaneously clearing the actual pawn.
 
-How chess engines save time by not re-analyzing positions that have already been reached in that game:
+How chess engines save time by not re-analyzing positions that have already been reached in that game: At the start of the game, for each piece, the engine generates an array of random 64-bit integers for that piece on every square (so the white knight has a 64-bit int for A1, A2, and so on...). Then the engine uses XOR to combine the random numbers of the pieces currently on the board into one 64-bit board hash, which it stores with the evaluation in an array called the Transposition Table. This entire process is called Zobrist Hashing. Before calculating a new position, the engine checks the Transposition Table and pulls the past evaluation. Since modern engines calculate positions so fast, collisions are possible due to the Birthday Paradox (the paradox states that the probability of a collision rises dramatically as sample size approaches the square root of total possibilities). The engine typically just ignores this, because the search tree is so large that one corrupted evaluation 10 moves in advance is usually filtered out by the rest of the algorithm.
 
-The history of how bitboards were created:
+The history of how bitboards were created: Bitboards were initially created for checkers in the 1950s by Arthur Samuel, an AI pioneer at IBM. In the 1960s and 1970s, the USSR and the United States used bitboards to create strong chess algorithms. "Magic Bitboards", which allowed sliding pieces by combining the current board with the properly calculated 64-bit integer to determine legal moves, were introduced in 2006.
 
