@@ -33,7 +33,7 @@ int main() {
     // 4. Move Knight back from c3 to b1
     board_hash ^= knight_keys[18]; // XORs knight_keys[18] with itself, toggling board hash to 0
     board_hash ^= knight_keys[1];  // Toggles b1 back on
-    printf("Moved back to b1:      0x%016llX\n", (unsigned long long)board_hash, " (same as initial)"); // Should be same as initial
+    printf("Moved back to b1 (same hash as initial):      0x%016llX\n", (unsigned long long)board_hash); // Should be same as initial
 
     return 0;
 }
