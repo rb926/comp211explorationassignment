@@ -21,3 +21,6 @@ How chess engines save time by not re-analyzing positions that have already been
 
 The history of how bitboards were created: Bitboards were initially created for checkers in the 1950s by Arthur Samuel, an AI pioneer at IBM. In the 1960s and 1970s, the USSR and the United States used bitboards to create strong chess algorithms. "Magic Bitboards", which allowed sliding pieces by combining the current board with the properly calculated 64-bit integer to determine legal moves, were introduced in 2006.
 
+**zobrist_hash.c file**
+
+This file provides a quick demonstration of hashing. It creates 64 random, unique hashes for every knight position using XOR shifts. It then moves the knight and displays how the hashes change between moves. To run it, go to the < > Code tab and click the green dropdown on the right that also says < > Code. Click on the Codespaces tab and create a codespace on main. In the terminal, type gcc zobrist_hash.c -o zobrist_hash to compile the program, and press enter. Then, type ./zobrist_hash to run the file and see the output.
